@@ -37,6 +37,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Verify the entered password against the stored hash
         if ($user && password_verify($password, $user['password'])) {
             echo "Du har logget inn som: " . $user["username"];
+
+            // Verify the entered password against the stored hash
+            if ($user && password_verify($password, $user['password'])) {
+                // Start en sesjon og lagre brukernavnet
+                session_start();
+                $_SESSION['username'] = $user['username'];
+
+                // Redirect til dashboard.php
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                echo "Feil brukernavn eller passord";
+            }
+
             // You may redirect to another page after successful login
         } else {
             echo "Feil brukernavn eller passord";

@@ -1,23 +1,17 @@
 <?php
-// dashboard.php
-
-include 'includes/header.php';
+session_start();
 
 // Sjekk om brukeren er logget inn
-if (!isset($_SESSION['user'])) {
-    // Omdiriger til innloggingssiden hvis brukeren ikke er logget inn
-    header('Location: login.php');
-    exit;
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php"); // Send brukeren tilbake til innloggingssiden hvis ikke logget inn
+    exit();
 }
 
-// Hent brukerinformasjon fra databasen eller sesjonen
-$userName = $_SESSION['user']; // Dette er en forenklet versjon; implementer riktig brukerhenting
-
+include 'inc/header.php';
 ?>
 
-<div class="container">
-    <h1>Velkommen til ditt instrumentbord, <?php echo $userName; ?>!</h1>
-    <!-- Instrumentbordinnhold -->
-</div>
+<h1>Velkommen til din dashbord, <?php echo $_SESSION['username']; ?>!</h1>
 
-<?php include 'includes/footer.php'; ?>
+<!-- Legg til annen innhold eller funksjonalitet for dashbordet her -->
+
+<?php include 'inc/footer.php'; ?>

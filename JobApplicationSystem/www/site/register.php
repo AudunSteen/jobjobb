@@ -41,8 +41,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         );
 
         // Insert data into the database
-        $stmt = $pdo->prepare("INSERT INTO users (username, password, phoneNumber, email) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$formData["username"], $formData["password"], $formData["phoneNumber"], $formData["email"]]);
+        $stmt = $pdo->prepare("INSERT INTO users (username, password, phoneNumber, email, userType) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$formData["username"], $formData["password"], $formData["phoneNumber"], $formData["email"], $_POST["userType"]]);
+
+
 
         echo "Brukeren har blitt lagt til med følgende informasjon: <br>";
         echo "Brukernavn: ", $formData["username"];
@@ -80,6 +82,13 @@ include 'inc/footer.php';
     <label for="email">E-post</label><br>
     <input type="text" id="email" name="email"><br>
     <span class="error"> <?php echo $emailErr ?></span><br>
+
+    <label for="userType">Velg brukergruppe:</label><br>
+    <select id="userType" name="userType">
+        <option value="jobbsoker">Jobbsøker</option>
+        <option value="arbeidsgiver">Arbeidsgiver</option>
+    </select><br>
+
 
     <input type="submit" name="submit" value="Send inn"><br>
 </form>
