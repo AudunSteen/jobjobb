@@ -1,51 +1,62 @@
 <?php
-// login.php
-
 include 'inc/header.php';
 
-// Håndter innloggingsskjema
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Implementer innloggingssjekk her
-    // For eksempel, sjekk brukernavn og passord fra skjema mot databasen
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'is115test');
 
-    // Simulert innloggingssjekk
-    if (validateUser($username, $password)) {
-        // Sett en sesjon og omdiriger til dashboard
-        $_SESSION['user'] = $username;
-        header('Location: dashboard.php');
-        exit;
+$dsn = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST;
+
+try {
+    $pdo = new PDO($dsn, DB_USER, DB_PASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Error connecting to database: " . $e->getMessage();
+}
+
+// Definere variabler og gjøre dem tomme slik at de kan lagres
+$usernameErr = $passwordErr = "";
+
+// Sjekke om skjemaet har blitt sendt
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["username"])) {
+        $usernameErr = "Du må skrive inn brukernavnet ditt";
+    } else if (empty($_POST["password"])) {
+        $passwordErr = "Du må skrive inn passordet ditt";
     } else {
-        $error_message = 'Feil brukernavn eller passord.';
+        // Sanitize user input to prevent SQL injection
+        $username = filter_var($_POST["username"], FILTER_SANITIZE_STRING);
+        $password = $_POST["password"];
+
+        // Retrieve user data from the database
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Verify the entered password against the stored hash
+        if ($user && password_verify($password, $user['password'])) {
+            echo "Du har logget inn som: " . $user["username"];
+            // You may redirect to another page after successful login
+        } else {
+            echo "Feil brukernavn eller passord";
+        }
     }
 }
 
-// Simulert funksjon for å validere brukernavn og passord
-function validateUser($username, $password)
-{
-    // Implementer denne funksjonen basert på din brukerhåndteringslogikk
-    // For eksempel, sjekk mot en database
-    return ($username === 'brukernavn' && $password === 'passord');
-}
+include 'inc/footer.php';
 ?>
 
-<div class="container">
-    <h1>Logg inn</h1>
+<!-- Opprette et skjema hvor brukeren kan fylle inn informasjonen sin og legger til feilmeldinger fra PHP-koden -->
+<form method="post" action="">
 
-    <?php if (isset($error_message)) : ?>
-        <p class="error-message"><?php echo $error_message; ?></p>
-    <?php endif; ?>
+    <label for="username">Brukernavn</label><br>
+    <input type="text" id="username" name="username"><br>
+    <span class="error"> <?php echo $usernameErr ?></span><br>
 
-    <form method="post" action="">
-        <label for="username">Brukernavn:</label>
-        <input type="text" name="username" required>
+    <label for="password">Passord</label><br>
+    <input type="password" id="password" name="password"><br>
+    <span class="error"> <?php echo $passwordErr ?></span><br>
 
-        <label for="password">Passord:</label>
-        <input type="password" name="password" required>
-
-        <button type="submit">Logg inn</button>
-    </form>
-</div>
-
-<?php include 'inc/footer.php'; ?>
+    <input type="submit" name="submit" value="Logg inn"><br>
+</form>

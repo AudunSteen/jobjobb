@@ -1,45 +1,85 @@
 <?php
-// register.php
 
 include 'inc/header.php';
 
-// Håndter registreringsskjema
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Implementer registreringssjekk her
-    // For eksempel, lagre brukernavn og passord i databasen
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'is115test');
 
-    // Simulert registreringssjekk
-    // Legg til riktig logikk basert på din implementasjon
-    $registration_successful = true;
+$dsn = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST;
 
-    if ($registration_successful) {
-        // Omdiriger til innloggingssiden etter vellykket registrering
-        header('Location: login.php');
-        exit;
-    } else {
-        $error_message = 'Registrering mislyktes. Vennligst prøv igjen.';
+try {
+    $pdo = new PDO($dsn, DB_USER, DB_PASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Error connecting to database: " . $e->getMessage();
+}
+
+// Definere variabler og gjøre dem tomme slik at de kan lagres
+$usernameErr = $passwordErr = $repeatPasswordErr = $phoneNumberErr = $emailErr = "";
+
+// Sjekke om skjemaet har blitt sendt
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["username"])) {
+        $usernameErr = "Du må skrive inn brukernavnet ditt";
+    } else if (empty($_POST["password"]) || strlen($_POST["password"]) < 8) {
+        $passwordErr = "Du må skrive inn passordet ditt eller sørge for at det er minst 8 tegn langt";
+    } else if (empty($_POST["repeatPassword"]) || $_POST["repeatPassword"] !== $_POST["password"]) {
+        $repeatPasswordErr = "Passordene samsvarer ikke";
+    } else if (empty($_POST["phoneNumber"]) || strlen($_POST["phoneNumber"]) < 8) {
+        $phoneNumberErr = "Du må skrive inn telefonnummeret ditt og sørge for at det er minst 9 sifre langt";
+    } else if (empty($_POST["email"]) || (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))) {
+        $emailErr = "Du må skrive inn din riktige e-postadresse";
+    } else if (isset($_POST["submit"])) {
+        // Legger til formdata i arrayen
+        $formData = array(
+            "username" => $_POST["username"],
+            "password" => password_hash($_POST["password"], PASSWORD_DEFAULT),
+            "phoneNumber" => $_POST["phoneNumber"],
+            "email" => $_POST["email"]
+        );
+
+        // Insert data into the database
+        $stmt = $pdo->prepare("INSERT INTO users (username, password, phoneNumber, email) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$formData["username"], $formData["password"], $formData["phoneNumber"], $formData["email"]]);
+
+        echo "Brukeren har blitt lagt til med følgende informasjon: <br>";
+        echo "Brukernavn: ", $formData["username"];
+        echo "<br>";
+        echo "Telefonnummer: ", $formData["phoneNumber"];
+        echo "<br>";
+        echo "E-postadresse: ", $formData["email"];
+        echo "<br>";
+        echo "Ditt passord har blitt lagret";
     }
 }
+
+include 'inc/footer.php';
 ?>
 
-<div class="container">
-    <h1>Registrer deg</h1>
+<!-- Opprette et skjema hvor brukeren kan fylle inn informasjonen sin og legger til feilmeldinger fra PHP-koden -->
+<form method="post" action="">
 
-    <?php if (isset($error_message)) : ?>
-        <p style="color: red;"><?php echo $error_message; ?></p>
-    <?php endif; ?>
+    <label for="username">Brukernavn</label><br>
+    <input type="text" id="username" name="username"><br>
+    <span class="error"> <?php echo $usernameErr ?></span><br>
 
-    <form method="post" action="">
-        <label for="username">Brukernavn:</label>
-        <input type="text" name="username" required>
+    <label for="password">Passord</label><br>
+    <input type="password" id="password" name="password"><br>
+    <span class="error"> <?php echo $passwordErr ?></span><br>
 
-        <label for="password">Passord:</label>
-        <input type="password" name="password" required>
+    <label for="repeatPassword">Gjenta Passord</label><br>
+    <input type="password" id="repeatPassword" name="repeatPassword"><br>
+    <span class="error"> <?php echo $repeatPasswordErr ?></span><br>
 
-        <button type="submit">Registrer deg</button>
-    </form>
-</div>
+    <label for="phoneNumber">Telefonnummer</label><br>
+    <input type="number" id="phoneNumber" name="phoneNumber"><br>
+    <span class="error"> <?php echo $phoneNumberErr ?></span><br>
 
-<?php include 'inc/footer.php'; ?>
+    <label for="email">E-post</label><br>
+    <input type="text" id="email" name="email"><br>
+    <span class="error"> <?php echo $emailErr ?></span><br>
+
+    <input type="submit" name="submit" value="Send inn"><br>
+</form>
