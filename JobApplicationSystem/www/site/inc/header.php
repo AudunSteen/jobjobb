@@ -68,8 +68,8 @@
     <header>
         <nav>
             <ul>
-                <li><a href="../index.php">Hjem</a></li>
-                <li><a href="site/templates/job_listing.php">Jobboppføringer</a></li>
+                <li><a href="profile.php">Hjem</a></li>
+                <li><a href="jobboppføringer.php">Jobboppføringer</a></li>
                 <li><a href="login.php">Logg inn</a></li>
                 <li><a href="register.php">Registrer deg</a></li>
                 <!-- Legg til flere navigasjonslenker etter behov -->
