@@ -1,5 +1,3 @@
-<!-- includes/header.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,27 +64,33 @@
 <body>
 
     <header>
-        <nav>
-            <ul>
-                <li><a href="profile.php">Hjem</a></li>
-                <li><a href="jobboppføringer.php">Jobboppføringer</a></li>
-                <li><a href="login.php">Logg inn</a></li>
-                <li><a href="register.php">Registrer deg</a></li>
-                <!-- Legg til flere navigasjonslenker etter behov -->
+    <nav>
+    <ul>
+        <li><a href="profile.php">Hjem</a></li>
+        <li><a href="jobboppføringer.php">Jobboppføringer</a></li>
+        <?php
+        // Sjekk om sesjon allerede er startet før du starter en ny
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
 
-                <?php
-                // Sjekk om sesjon allerede er startet før du starter en ny
-                if (session_status() == PHP_SESSION_NONE) {
-                    session_start();
-                }
+        // Vis "Logg inn" og "Registrer deg" kun hvis brukeren ikke er logget inn
+        if (!isset($_SESSION['username'])) {
+            echo '<li><a href="login.php">Logg inn</a></li>';
+            echo '<li><a href="register.php">Registrer deg</a></li>';
+        }
 
-                // Vis "Logg ut"-lenken hvis brukeren er logget inn
-                if (isset($_SESSION['username'])) {
-                    echo '<li><a id="logout" href="login.php">Logg ut</a></li>';
-                }
-                ?>
-            </ul>
-        </nav>
+        // Vis "Logg ut"-lenken hvis brukeren er logget inn
+        if (isset($_SESSION['username'])) {
+            echo '<li><a id="logout" href="logout.php">Logg ut</a></li>';
+        } else {
+            // Legg til en melding hvis brukeren ikke er logget inn
+            echo '<li><a href="#">Ingen tilgang! Logg inn!</a></li>';
+        }
+        ?>
+    </ul>
+</nav>
+
     </header>
 </body>
 

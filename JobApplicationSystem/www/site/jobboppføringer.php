@@ -1,6 +1,12 @@
 <?php
 include 'inc/header.php';
 
+// Sjekk om brukeren er logget inn
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php"); // Omdiriger brukeren til innloggingssiden hvis de ikke er logget inn
+    exit();
+}
+
 // Koble til databasen
 $server = "localhost";
 $brukernavn = "root";
@@ -13,14 +19,42 @@ if ($conn->connect_error) {
     die("Tilkobling mislyktes: " . $conn->connect_error);
 }
 
-// Hent jobboppføringer fra databasen
-$sql = "SELECT * FROM jobbannonser";
+// Behandle filtervalg
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'alle';
+
+// SQL-query med filter
+if ($filter === 'alle') {
+    $sql = "SELECT * FROM jobbannonser";
+} else {
+    $sql = "SELECT * FROM jobbannonser WHERE interesse = '$filter'";
+}
+
 $result = $conn->query($sql);
+
+// Hent alle kategorier fra databasen
+$sql_categories = "SELECT DISTINCT interesse FROM jobbannonser";
+$result_categories = $conn->query($sql_categories);
 
 ?>
 
 <div class="container">
     <h1>Jobboppføringer</h1>
+
+    <!-- Filter-skjema -->
+    <form method="GET" action="jobboppføringer.php">
+        <label for="filter">Filtrer etter kategori:</label>
+        <select name="filter" id="filter">
+            <option value="alle">Alle</option>
+            <?php
+            while ($row_category = $result_categories->fetch_assoc()) {
+                $category = $row_category['interesse'];
+                echo "<option value='$category'>$category</option>";
+            }
+            ?>
+        </select>
+        <input type="submit" value="Filtrer">
+    </form>
+
     <table>
         <tr>
             <th>Tittel</th>
@@ -47,7 +81,6 @@ $result = $conn->query($sql);
 
 <?php include 'inc/footer.php'; ?>
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,14 +88,23 @@ $result = $conn->query($sql);
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
         }
 
         .container {
             max-width: 800px;
-            margin: 20px auto;
+            margin: 0 auto;
             padding: 20px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 0;
         }
 
         table {
@@ -94,6 +136,5 @@ $result = $conn->query($sql);
         }
     </style>
 </head>
-
 </html>
 

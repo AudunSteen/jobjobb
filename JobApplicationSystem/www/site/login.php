@@ -8,6 +8,8 @@ define('DB_NAME', 'is115test');
 
 $dsn = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST;
 
+$logout_message = isset($_GET['logout_message']) ? $_GET['logout_message'] : '';
+
 try {
     $pdo = new PDO($dsn, DB_USER, DB_PASS);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -73,4 +75,12 @@ include 'inc/footer.php';
     <span class="error"> <?php echo $passwordErr ?></span><br>
 
     <input type="submit" name="submit" value="Logg inn"><br>
+
+    <!-- Vis logg ut-meldingen for brukeren -->
+<p><?php echo $logout_message; ?></p>
+
+<!-- Ditt eksisterende skjema for innlogging -->
+<form method="post" action="">
+    <!-- ... -->
+</form>
 </form>

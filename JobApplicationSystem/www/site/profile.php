@@ -113,8 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="container">
-        <h1>Din brukerprofil</h1>
-        <p>Velkommen til din profil, <?php echo $_SESSION['username']; ?>!</p>
+    <h1><?php echo $_SESSION['username']; ?> sin profil</h1>
 
         <h2>Legg til en jobbannonse</h2>
         <form method="POST">
