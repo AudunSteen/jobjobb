@@ -83,10 +83,7 @@
         // Vis "Logg ut"-lenken hvis brukeren er logget inn
         if (isset($_SESSION['username'])) {
             echo '<li><a id="logout" href="logout.php">Logg ut</a></li>';
-        } else {
-            // Legg til en melding hvis brukeren ikke er logget inn
-            echo '<li><a href="#">Ingen tilgang! Logg inn!</a></li>';
-        }
+        } 
         ?>
     </ul>
 </nav>

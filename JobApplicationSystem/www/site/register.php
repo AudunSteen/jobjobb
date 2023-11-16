@@ -1,4 +1,5 @@
 <?php
+//vasking av data
 
 include 'inc/header.php';
 

@@ -28,10 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $beskrivelse = $_POST['beskrivelse'];
     $publiseringsdato = date('Y-m-d');
     $interesse = $_POST['interesse'];
+    $soknadsfrist = $_POST['soknadsfrist']; // Legg til denne linjen
 
-    $sql_insert_annonse = "INSERT INTO jobbannonser (tittel, beskrivelse, publiseringsdato, interesse) VALUES ('$tittel', '$beskrivelse', '$publiseringsdato', '$interesse')";
+    $sql_insert_annonse = "INSERT INTO jobbannonser (tittel, beskrivelse, publiseringsdato, interesse, soknadsfrist) VALUES ('$tittel', '$beskrivelse', '$publiseringsdato', '$interesse', '$soknadsfrist')";
     $conn->query($sql_insert_annonse);
 }
+
 
 ?>
 
@@ -131,6 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
             <br>
             <input type="submit" value="Legg til jobbannonse">
+            <label for="soknadsfrist">Søknadsfrist:</label>
+            <input type="date" name="soknadsfrist" required>
+
         </form>
     </div>
 </body>

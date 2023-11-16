@@ -21,13 +21,16 @@ if ($conn->connect_error) {
 
 // Behandle filtervalg
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'alle';
+$soknadsfrist = isset($_GET['soknadsfrist']) ? $_GET['soknadsfrist'] : 'asc';
 
-// SQL-query med filter
-if ($filter === 'alle') {
-    $sql = "SELECT * FROM jobbannonser";
-} else {
-    $sql = "SELECT * FROM jobbannonser WHERE interesse = '$filter'";
+// SQL-query med filter og sortering
+$sql = "SELECT * FROM jobbannonser";
+
+if ($filter !== 'alle') {
+    $sql .= " WHERE interesse = '$filter'";
 }
+
+$sql .= " ORDER BY soknadsfrist $soknadsfrist"; // Sorter etter søknadsfrist (asc eller desc)
 
 $result = $conn->query($sql);
 
@@ -51,6 +54,11 @@ $result_categories = $conn->query($sql_categories);
                 echo "<option value='$category'>$category</option>";
             }
             ?>
+        </select>
+        <label for="soknadsfrist">Sorter etter søknadsfrist:</label>
+        <select name="soknadsfrist" id="soknadsfrist">
+            <option value="asc">Dato stigende</option>
+            <option value="desc">Dato synkende</option>
         </select>
         <input type="submit" value="Filtrer">
     </form>
@@ -80,6 +88,7 @@ $result_categories = $conn->query($sql_categories);
 </div>
 
 <?php include 'inc/footer.php'; ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -137,4 +146,3 @@ $result_categories = $conn->query($sql_categories);
     </style>
 </head>
 </html>
-
