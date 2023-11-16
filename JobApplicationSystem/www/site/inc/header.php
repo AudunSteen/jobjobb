@@ -45,7 +45,6 @@
             color: #4caf50;
         }
 
-        /* Ny stil for "Logg ut"-lenken */
         nav #logout {
             background-color: #333;
             color: white;
@@ -62,32 +61,82 @@
 </head>
 
 <body>
+    <?php
+    // Sjekk om sesjon allerede er startet før du starter en ny
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Sett PHP-variabler basert på brukerens innloggingsstatus
+    $isLoggedIn = isset($_SESSION['username']);
+    ?>
+
+    <script>
+        function displayAccessDeniedMessage() {
+            var messageDiv = document.createElement('div');
+            messageDiv.innerHTML = 'Ingen tilgang! Logg inn!';
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '50%';
+            messageDiv.style.left = '50%';
+            messageDiv.style.transform = 'translate(-50%, -50%)';
+            messageDiv.style.padding = '20px';
+            messageDiv.style.backgroundColor = '#333';
+            messageDiv.style.color = 'white';
+            messageDiv.style.borderRadius = '5px';
+            messageDiv.style.zIndex = '9999';
+
+            document.body.appendChild(messageDiv);
+
+            setTimeout(function() {
+                document.body.removeChild(messageDiv);
+            }, 5000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var homeButton = document.querySelector('a[href="profile.php"]');
+            var jobListingsButton = document.querySelector('a[href="jobboppføringer.php"]');
+
+            if (homeButton) {
+                homeButton.addEventListener('click', function(event) {
+                    // Hindrer lenken i å utføre standard handling hvis ikke logget inn
+                    if (!<?php echo $isLoggedIn ? 'true' : 'false'; ?>) {
+                        event.preventDefault();
+                        displayAccessDeniedMessage();
+                    }
+                });
+            }
+
+            if (jobListingsButton) {
+                jobListingsButton.addEventListener('click', function(event) {
+                    // Hindrer lenken i å utføre standard handling hvis ikke logget inn
+                    if (!<?php echo $isLoggedIn ? 'true' : 'false'; ?>) {
+                        event.preventDefault();
+                        displayAccessDeniedMessage();
+                    }
+                });
+            }
+        });
+    </script>
 
     <header>
-    <nav>
-    <ul>
-        <li><a href="profile.php">Hjem</a></li>
-        <li><a href="jobboppføringer.php">Jobboppføringer</a></li>
-        <?php
-        // Sjekk om sesjon allerede er startet før du starter en ny
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
+        <nav>
+            <ul>
+                <li><a href="profile.php">Hjem</a></li>
+                <li><a href="jobboppføringer.php">Jobboppføringer</a></li>
+                <?php
+                // Vis "Logg inn" og "Registrer deg" kun hvis brukeren ikke er logget inn
+                if (!$isLoggedIn) {
+                    echo '<li><a href="login.php">Logg inn</a></li>';
+                    echo '<li><a href="register.php">Registrer deg</a></li>';
+                }
 
-        // Vis "Logg inn" og "Registrer deg" kun hvis brukeren ikke er logget inn
-        if (!isset($_SESSION['username'])) {
-            echo '<li><a href="login.php">Logg inn</a></li>';
-            echo '<li><a href="register.php">Registrer deg</a></li>';
-        }
-
-        // Vis "Logg ut"-lenken hvis brukeren er logget inn
-        if (isset($_SESSION['username'])) {
-            echo '<li><a id="logout" href="logout.php">Logg ut</a></li>';
-        } 
-        ?>
-    </ul>
-</nav>
-
+                // Vis "Logg ut"-lenken hvis brukeren er logget inn
+                if ($isLoggedIn) {
+                    echo '<li><a id="logout" href="logout.php">Logg ut</a></li>';
+                }
+                ?>
+            </ul>
+        </nav>
     </header>
 </body>
 
