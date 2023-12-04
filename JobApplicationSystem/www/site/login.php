@@ -1,10 +1,12 @@
 <?php
+// login.php
+
 include 'inc/header.php';
 
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', 'is115test');
+define('DB_NAME', 'jobbsoksystem');
 
 $dsn = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST;
 
@@ -38,22 +40,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Verify the entered password against the stored hash
         if ($user && password_verify($password, $user['password'])) {
-            echo "Du har logget inn som: " . $user["username"];
+            // Start en sesjon og lagre brukernavnet og brukerrollen
+            session_start();
+            $_SESSION['username'] = $user['username'];
 
-            // Verify the entered password against the stored hash
-            if ($user && password_verify($password, $user['password'])) {
-                // Start en sesjon og lagre brukernavnet
-                session_start();
-                $_SESSION['username'] = $user['username'];
+            // Hent brukerens userType fra databasen og lagre det i sesjonen
+            $stmt_userType = $pdo->prepare("SELECT userType FROM users WHERE username = ?");
+            $stmt_userType->execute([$username]);
+            $userType = $stmt_userType->fetchColumn();
+            $_SESSION['userType'] = $userType;
 
-                // Redirect til dashboard.php
-                header("Location: dashboard.php");
-                exit();
-            } else {
-                echo "Feil brukernavn eller passord";
-            }
-
-            // You may redirect to another page after successful login
+            // Redirect til dashboard.php
+            header("Location: dashboard.php");
+            exit();
         } else {
             echo "Feil brukernavn eller passord";
         }
@@ -77,10 +76,10 @@ include 'inc/footer.php';
     <input type="submit" name="submit" value="Logg inn"><br>
 
     <!-- Vis logg ut-meldingen for brukeren -->
-<p><?php echo $logout_message; ?></p>
+    <p><?php echo $logout_message; ?></p>
 
-<!-- Ditt eksisterende skjema for innlogging -->
-<form method="post" action="">
-    <!-- ... -->
-</form>
+    <!-- Ditt eksisterende skjema for innlogging -->
+    <form method="post" action="">
+        <!-- ... -->
+    </form>
 </form>
