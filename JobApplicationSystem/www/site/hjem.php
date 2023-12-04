@@ -2,8 +2,8 @@
 session_start();
 
 // Sjekk om brukeren er logget inn
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Send brukeren tilbake til innloggingssiden hvis ikke logget inn
+if (!isset($_SESSION['username']) || $_SESSION['userType'] !== 'arbeidsgiver') {
+    header("Location: login.php"); // Send brukeren tilbake til innloggingssiden hvis ikke logget inn eller ikke er arbeidsgiver
     exit();
 }
 
@@ -12,7 +12,7 @@ include 'inc/header.php';
 $server = "localhost";
 $brukernavn = "root";
 $passord = "";
-$database = "is115test";
+$database = "jobbsoksystem";
 
 // Opprett tilkobling
 $conn = new mysqli($server, $brukernavn, $passord, $database);
@@ -28,17 +28,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $beskrivelse = $_POST['beskrivelse'];
     $publiseringsdato = date('Y-m-d');
     $interesse = $_POST['interesse'];
-    $soknadsfrist = $_POST['soknadsfrist']; // Legg til denne linjen
+    $soknadsfrist = $_POST['soknadsfrist'];
 
-    $sql_insert_annonse = "INSERT INTO jobbannonser (tittel, beskrivelse, publiseringsdato, interesse, soknadsfrist) VALUES ('$tittel', '$beskrivelse', '$publiseringsdato', '$interesse', '$soknadsfrist')";
-    $conn->query($sql_insert_annonse);
+    // Hent arbeidsgiverens ID fra databasen basert på brukernavnet i sesjonen
+    $arbeidsgiver_username = $_SESSION['username'];
+    
+    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
+    $stmt->bind_param("s", $arbeidsgiver_username);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $arbeidsgiver = $result->fetch_assoc();
+        $arbeidsgiver_id = $arbeidsgiver['id'];
+
+        // Legg til jobbannonse med kobling til arbeidsgiveren
+        $sql_insert_annonse = "INSERT INTO jobbannonser (tittel, beskrivelse, publiseringsdato, interesse, soknadsfrist, arbeidsgiver_id) VALUES (?, ?, ?, ?, ?, ?)";
+        
+        $stmt_insert = $conn->prepare($sql_insert_annonse);
+        $stmt_insert->bind_param("sssssi", $tittel, $beskrivelse, $publiseringsdato, $interesse, $soknadsfrist, $arbeidsgiver_id);
+        
+        if ($stmt_insert->execute()) {
+            echo "Jobbannonse lagt til.";
+        } else {
+            echo "Feil ved lagging av jobbannonse: " . $stmt_insert->error;
+        }
+
+        $stmt_insert->close();
+    } else {
+        echo "Feil: Fant ikke arbeidsgiveren i databasen.";
+    }
 }
 
-
+include 'inc/footer.php';
 ?>
-
-
-<?php include 'inc/footer.php'; ?>
 
 <!DOCTYPE html>
 <html>
@@ -115,9 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 
+
+</head>
 <body>
     <div class="container">
-        <h1><?php echo $_SESSION['username']; ?> sin profil</h1>
+    <h1><?php echo $_SESSION['username']; ?> sin profil</h1>
 
         <h2>Legg til en jobbannonse</h2>
         <form method="POST">
@@ -141,5 +167,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 </body>
-
 </html>
+

@@ -11,7 +11,7 @@ if (!isset($_SESSION['username'])) {
 $server = "localhost";
 $brukernavn = "root";
 $passord = "";
-$database = "is115test";
+$database = "jobbsoksystem";
 
 $conn = new mysqli($server, $brukernavn, $passord, $database);
 
@@ -69,6 +69,7 @@ $result_categories = $conn->query($sql_categories);
             <th>Beskrivelse</th>
             <th>Publiseringsdato</th>
             <th>Interesse</th>
+            <th>Handling</th>
         </tr>
         <?php
         if ($result->num_rows > 0) {
@@ -78,16 +79,18 @@ $result_categories = $conn->query($sql_categories);
                 echo "<td>" . $row["beskrivelse"] . "</td>";
                 echo "<td>" . $row["publiseringsdato"] . "</td>";
                 echo "<td>" . $row["interesse"] . "</td>";
+                echo "<td><a href='vis_annonse.php?id=" . $row["id"] . "'>Vis detaljer</a></td>"; // Legg til lenke for å vise detaljer
                 echo "</tr>";
             }
         } else {
-            echo "<tr><td colspan='4'>Ingen jobboppføringer tilgjengelig.</td></tr>";
+            echo "<tr><td colspan='5'>Ingen jobboppføringer tilgjengelig.</td></tr>";
         }
         ?>
     </table>
 </div>
 
 <?php include 'inc/footer.php'; ?>
+
 
 
 <!DOCTYPE html>

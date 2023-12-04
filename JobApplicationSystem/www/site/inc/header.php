@@ -80,8 +80,9 @@
                         echo '<li><a href="profile.php">Min profil</a></li>';
                     } elseif ($_SESSION['userType'] === 'arbeidsgiver') {
                         // Alternativer for arbeidsgiver
+                        echo '<li><a href="jobboppføringer.php">Hjem/annonser</a></li>';
                         echo '<li><a href="hjem.php">Opprett annonser</a></li>';
-                        echo '<li><a href="hjem.php">Egne annonser</a></li>';
+                        echo '<li><a href="index.php">Egne annonser</a></li>';
                         echo '<li><a href="profile.php">Bedriftsprofil</a></li>';
                     }
                 }
