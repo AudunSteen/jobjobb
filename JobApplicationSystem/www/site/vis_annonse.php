@@ -7,19 +7,6 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Sjekk om det er sendt en søknad
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['soknad_pdf'])) {
-    // Lagre opplastede PDF-filer i en spesifisert mappe
-    $uploadDirectory = 'uploads/';
-    $uploadedFile = $uploadDirectory . basename($_FILES['soknad_pdf']['name']);
-
-    if (move_uploaded_file($_FILES['soknad_pdf']['tmp_name'], $uploadedFile)) {
-        echo "PDF-filen ble lastet opp.";
-    } else {
-        echo "Det oppstod en feil ved opplasting av PDF-filen.";
-    }
-}
-
 // Koble til databasen
 $server = "localhost";
 $brukernavn = "root";
@@ -50,9 +37,12 @@ if ($result_annonse->num_rows > 0) {
         <p><strong>Søknadsfrist:</strong> <?php echo $row_annonse['soknadsfrist']; ?></p>
 
         <!-- Skjema for å laste opp søknad -->
-        <form method="POST" action="" enctype="multipart/form-data">
-            <label for="soknad_pdf">Last opp søknad (PDF):</label>
-            <input type="file" name="soknad_pdf" accept=".pdf" required>
+        <form action="handle_soknad.php" method="post" enctype="multipart/form-data">
+            <br>
+            <label for="pdf">Last opp PDF-søknad:</label>
+            <input type="file" name="pdf" accept=".pdf" required>
+            <br>
+            <input type="hidden" name="jobbannonse_id" value="<?php echo $annonce_id; ?>">
             <input type="submit" value="Send søknad">
         </form>
     </div>
