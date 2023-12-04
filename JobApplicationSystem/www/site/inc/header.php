@@ -77,10 +77,12 @@
                 if (isset($_SESSION['userType'])) {
                     if ($_SESSION['userType'] === 'jobbsoker') {
                         // Alternativer for jobbsøker
-                        echo '<li><a href="din_jobbsoker_side.php">Din Jobbsøker Side</a></li>';
+                        echo '<li><a href="hjem.php">hjem</a></li>';
+                        echo '<li><a href="profile.php">Min profil</a></li>';
                         echo '<li><a href="jobboppføringer.php">Jobboppføringer</a></li>';
                     } elseif ($_SESSION['userType'] === 'arbeidsgiver') {
                         // Alternativer for arbeidsgiver
+                        echo '<li><a href="hjem.php">hjem</a></li>';
                         echo '<li><a href="din_arbeidsgiver_side.php">Din Arbeidsgiver Side</a></li>';
                         echo '<li><a href="arbeidsgiver_view_users.php">View Users</a></li>';
                         echo '<li><a href="arbeidsgiver_nyapplication.php">Create New Job Application</a></li>';
@@ -97,7 +99,7 @@
                 // Vis "Logg ut"-lenken hvis brukeren er logget inn
                 if (isset($_SESSION['username'])) {
                     echo '<li><a id="logout" href="logout.php">Logg ut</a></li>';
-                } 
+                }
                 ?>
             </ul>
         </nav>

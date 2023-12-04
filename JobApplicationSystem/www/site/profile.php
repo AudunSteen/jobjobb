@@ -12,7 +12,7 @@ include 'inc/header.php';
 $server = "localhost";
 $brukernavn = "root";
 $passord = "";
-$database = "is115test";
+$database = "toreTest";
 
 // Opprett tilkobling
 $conn = new mysqli($server, $brukernavn, $passord, $database);
@@ -22,122 +22,76 @@ if ($conn->connect_error) {
     die("Tilkobling mislyktes: " . $conn->connect_error);
 }
 
-// Legg til en jobbannonse
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $tittel = $_POST['tittel'];
-    $beskrivelse = $_POST['beskrivelse'];
-    $publiseringsdato = date('Y-m-d');
-    $interesse = $_POST['interesse'];
-    $soknadsfrist = $_POST['soknadsfrist']; // Legg til denne linjen
+// Sjekk om skjemaet har blitt sendt
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submitProfile"])) {
+    // Sjekk om brukeren er logget inn
+    if (!isset($_SESSION['username'])) {
+        // Legg til logikk for å håndtere dette scenariet, for eksempel omdirigere til innloggingssiden
+        echo "Ikke logget inn!";
+        exit();
+    }
 
-    $sql_insert_annonse = "INSERT INTO jobbannonser (tittel, beskrivelse, publiseringsdato, interesse, soknadsfrist) VALUES ('$tittel', '$beskrivelse', '$publiseringsdato', '$interesse', '$soknadsfrist')";
-    $conn->query($sql_insert_annonse);
+    // Håndter profilbilde
+    $profilePicture = $_FILES['profilePicture']['name'];
+    $profilePictureTemp = $_FILES['profilePicture']['tmp_name'];
+    $profilePicturePath = "uploads/" . $profilePicture; // Endret stien for å lagre i "uploads" mappen
+    move_uploaded_file($profilePictureTemp, $profilePicturePath);
+
+    // Håndter personlig informasjon og CV-fil
+    $personalInfo = $_POST['personalInfo'];
+    $cvFile = $_FILES['cvFile']['name'];
+    $cvFileTemp = $_FILES['cvFile']['tmp_name'];
+    $cvFilePath = "uploads/" . $cvFile; // Endret stien for å lagre i "uploads" mappen
+    move_uploaded_file($cvFileTemp, $cvFilePath);
+
+    // Lagre informasjon i databasen (tilpass med din databasestruktur)
+    $UID = $_SESSION['username'];
+
+    $insertQuery = "INSERT INTO users (profile_picture, personal_info, cv_file) VALUES (?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($insertQuery);
+    $stmt->bind_param("isss", $username, $profilePicturePath, $personalInfo, $cvFilePath); // Endret til å lagre stien, ikke bare filnavnet
+
+    if ($stmt->execute()) {
+        header("Location: profile.php");
+        exit();
+    } else {
+        echo "Feil ved lagring av profilinformasjon: " . $conn->error;
+    }
+
+    $stmt->close();
 }
-
-
 ?>
 
-
-<?php include 'inc/footer.php'; ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Din brukerprofil</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        h1 {
-            color: #333;
-            margin-top: 0;
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>Jobbsøkerprofil</title>
+    <!-- Legg til eventuelle stiler eller skript du trenger -->
 </head>
+
 <body>
-    <div class="container">
-    <h1><?php echo $_SESSION['username']; ?> sin profil</h1>
+    <h1>Jobbsøkerprofil</h1>
 
-        <h2>Legg til en jobbannonse</h2>
-        <form method="POST">
-            <label for="tittel">Tittel:</label>
-            <input type="text" name="tittel" required>
-            <br>
-            <label for="beskrivelse">Beskrivelse:</label>
-            <textarea name="beskrivelse" required></textarea>
-            <br>
-            <label for="interesse">Interesse:</label>
-            <select name="interesse">
-                <option value="IT">IT</option>
-                <option value="Administrasjon">Administrasjon</option>
-                <option value="Økonomi">Økonomi</option>
-            </select>
-            <br>
-            <input type="submit" value="Legg til jobbannonse">
-            <label for="soknadsfrist">Søknadsfrist:</label>
-            <input type="date" name="soknadsfrist" required>
+    <!-- Skjema for profilinformasjon -->
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+        <label for="profilePicture">Profilbilde:</label>
+        <input type="file" name="profilePicture" accept="image/*"><br>
 
-        </form>
-    </div>
+        <label for="personalInfo">Personlig informasjon:</label>
+        <textarea name="personalInfo" rows="4" cols="50"></textarea><br>
+
+        <label for="cvFile">Last opp CV:</label>
+        <input type="file" name="cvFile" accept=".pdf, .doc, .docx"><br>
+
+        <input type="submit" name="submitProfile" value="Lagre profil">
+    </form>
+
+    <!-- Legg til oversikt over søkte jobber med status her -->
+
 </body>
-</html>
 
+</html>
