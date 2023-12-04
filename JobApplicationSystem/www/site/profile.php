@@ -47,10 +47,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submitProfile"])) {
     // Lagre informasjon i databasen (tilpass med din databasestruktur)
     $UID = $_SESSION['username'];
 
-    $insertQuery = "INSERT INTO users (profile_picture, personal_info, cv_file) VALUES (?, ?, ?, ?)";
+    $insertQuery = "INSERT INTO users (UID, profile_picture, personal_info, cv_file) VALUES (?, ?, ?, ?)";
 
     $stmt = $conn->prepare($insertQuery);
-    $stmt->bind_param("isss", $username, $profilePicturePath, $personalInfo, $cvFilePath); // Endret til å lagre stien, ikke bare filnavnet
+    $stmt->bind_param("ssss", $UID, $profilePicturePath, $personalInfo, $cvFilePath);
 
     if ($stmt->execute()) {
         header("Location: profile.php");
@@ -58,6 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submitProfile"])) {
     } else {
         echo "Feil ved lagring av profilinformasjon: " . $conn->error;
     }
+
 
     $stmt->close();
 }

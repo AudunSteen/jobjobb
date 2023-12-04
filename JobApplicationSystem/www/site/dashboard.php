@@ -10,7 +10,7 @@ if (!isset($_SESSION['username'])) {
 include 'inc/header.php';
 ?>
 
-<h1>Velkommen til din dashbord, <?php echo $_SESSION['username']; ?>!</h1>
+<h1>Velkommen, <?php echo $_SESSION['username']; ?>!</h1>
 
 <!-- Legg til annen innhold eller funksjonalitet for dashbordet her -->
 

@@ -66,7 +66,6 @@
     <header>
         <nav>
             <ul>
-                <li><a href="profile.php">Hjem</a></li>
                 <?php
                 // Sjekk om sesjon allerede er startet før du starter en ny
                 if (session_status() == PHP_SESSION_NONE) {
@@ -77,16 +76,13 @@
                 if (isset($_SESSION['userType'])) {
                     if ($_SESSION['userType'] === 'jobbsoker') {
                         // Alternativer for jobbsøker
-                        echo '<li><a href="hjem.php">hjem</a></li>';
+                        echo '<li><a href="jobboppføringer.php">Hjem/annonser</a></li>';
                         echo '<li><a href="profile.php">Min profil</a></li>';
-                        echo '<li><a href="jobboppføringer.php">Jobboppføringer</a></li>';
                     } elseif ($_SESSION['userType'] === 'arbeidsgiver') {
                         // Alternativer for arbeidsgiver
-                        echo '<li><a href="hjem.php">hjem</a></li>';
-                        echo '<li><a href="din_arbeidsgiver_side.php">Din Arbeidsgiver Side</a></li>';
-                        echo '<li><a href="arbeidsgiver_view_users.php">View Users</a></li>';
-                        echo '<li><a href="arbeidsgiver_nyapplication.php">Create New Job Application</a></li>';
-                        echo '<li><a href="arbeidsgiver_view_applications.php">View Job Applications</a></li>';
+                        echo '<li><a href="hjem.php">Opprett annonser</a></li>';
+                        echo '<li><a href="hjem.php">Egne annonser</a></li>';
+                        echo '<li><a href="profile.php">Bedriftsprofil</a></li>';
                     }
                 }
 
