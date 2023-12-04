@@ -11,7 +11,7 @@ if (!isset($_SESSION['username'])) {
 $server = "localhost";
 $brukernavn = "root";
 $passord = "";
-$database = "jobbsoksystem";
+$database = "is115DB";
 
 $conn = new mysqli($server, $brukernavn, $passord, $database);
 

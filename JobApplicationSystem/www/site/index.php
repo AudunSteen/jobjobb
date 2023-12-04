@@ -12,7 +12,7 @@ include 'inc/header.php';
 $server = "localhost";
 $brukernavn = "root";
 $passord = "";
-$database = "jobbsoksystem";
+$database = "is115DB";
 
 // Opprett tilkobling
 $conn = new mysqli($server, $brukernavn, $passord, $database);

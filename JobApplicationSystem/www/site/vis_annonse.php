@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['soknad_pdf'])) {
 $server = "localhost";
 $brukernavn = "root";
 $passord = "";
-$database = "is115test";
+$database = "is115DB";
 
 $conn = new mysqli($server, $brukernavn, $passord, $database);
 
