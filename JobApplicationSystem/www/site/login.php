@@ -40,8 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Verify the entered password against the stored hash
         if ($user && password_verify($password, $user['password'])) {
-            // Start en sesjon og lagre brukernavnet og brukerrollen
+            // Start en sesjon og lagre brukernavnet, brukerrollen, og bruker-ID
             session_start();
+            $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
 
             // Hent brukerens userType fra databasen og lagre det i sesjonen

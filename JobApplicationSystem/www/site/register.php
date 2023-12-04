@@ -1,4 +1,6 @@
 <?php
+//vasking av data
+
 include 'inc/header.php';
 
 define('DB_HOST', 'localhost');
@@ -31,44 +33,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else if (empty($_POST["email"]) || (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))) {
         $emailErr = "Du må skrive inn din riktige e-postadresse";
     } else if (isset($_POST["submit"])) {
-        // Sjekk om brukernavnet allerede eksisterer i databasen
-        $checkUsernameStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
-        $checkUsernameStmt->execute([$_POST["username"]]);
-        $usernameExists = $checkUsernameStmt->fetchColumn();
+        // Legger til formdata i arrayen
+        $formData = array(
+            "username" => $_POST["username"],
+            "password" => password_hash($_POST["password"], PASSWORD_DEFAULT),
+            "phoneNumber" => $_POST["phoneNumber"],
+            "email" => $_POST["email"]
+        );
 
-        if ($usernameExists) {
-            $usernameErr = "Dette brukernavnet er allerede tatt. Vennligst velg et annet.";
-        } else {
-            // Sjekk om e-postadressen allerede eksisterer i databasen
-            $checkEmailStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
-            $checkEmailStmt->execute([$_POST["email"]]);
-            $emailExists = $checkEmailStmt->fetchColumn();
+        // Insert data into the database
+        $stmt = $pdo->prepare("INSERT INTO users (username, password, phoneNumber, email, userType) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$formData["username"], $formData["password"], $formData["phoneNumber"], $formData["email"], $_POST["userType"]]);
 
-            if ($emailExists) {
-                $emailErr = "Denne e-postadressen er allerede registrert. Vennligst bruk en annen e-postadresse.";
-            } else {
-                // Legger til formdata i arrayen
-                $formData = array(
-                    "username" => $_POST["username"],
-                    "password" => password_hash($_POST["password"], PASSWORD_DEFAULT),
-                    "phoneNumber" => $_POST["phoneNumber"],
-                    "email" => $_POST["email"]
-                );
 
-                // Insert data into the database
-                $stmt = $pdo->prepare("INSERT INTO users (username, password, phoneNumber, email, userType) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$formData["username"], $formData["password"], $formData["phoneNumber"], $formData["email"], $_POST["userType"]]);
 
-                echo "Brukeren har blitt lagt til med følgende informasjon: <br>";
-                echo "Brukernavn: ", $formData["username"];
-                echo "<br>";
-                echo "Telefonnummer: ", $formData["phoneNumber"];
-                echo "<br>";
-                echo "E-postadresse: ", $formData["email"];
-                echo "<br>";
-                echo "Ditt passord har blitt lagret";
-            }
-        }
+        echo "Brukeren har blitt lagt til med følgende informasjon: <br>";
+        echo "Brukernavn: ", $formData["username"];
+        echo "<br>";
+        echo "Telefonnummer: ", $formData["phoneNumber"];
+        echo "<br>";
+        echo "E-postadresse: ", $formData["email"];
+        echo "<br>";
+        echo "Ditt passord har blitt lagret";
     }
 }
 
@@ -103,6 +89,7 @@ include 'inc/footer.php';
         <option value="jobbsoker">Jobbsøker</option>
         <option value="arbeidsgiver">Arbeidsgiver</option>
     </select><br>
+
 
     <input type="submit" name="submit" value="Send inn"><br>
 </form>
