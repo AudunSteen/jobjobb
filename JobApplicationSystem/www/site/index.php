@@ -63,4 +63,3 @@ if ($result->num_rows === 1) {
     echo "Feil: Fant ikke arbeidsgiveren i databasen.";
 }
 
-include 'inc/footer.php'; // Inkluderer HTML-bunntekst

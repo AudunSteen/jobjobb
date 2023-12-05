@@ -55,7 +55,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-include 'inc/footer.php';
 ?>
 
 <!-- Skjema hvor bruker kan fylle inn informasjonen sin og legger til feilmeldinger fra PHP-koden -->

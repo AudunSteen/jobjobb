@@ -6,7 +6,7 @@ session_start();
 include 'inc/session.php'; //Sjekker om bruker er logget inn
 include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 
-// Melding til brukeren basert om brukeren er arbeidsgiver eller jobbsoker
+// En hyggelig velkomstmelding til brukeren basert om brukeren er arbeidsgiver eller jobbsoker
 $userTypeMessage = "";
 if ($_SESSION['userType'] === 'arbeidsgiver') {
     $userTypeMessage = "Du er registrert som arbeidsgiver. Velkommen til vårt jobbsøkesystem! Her kan du publisere ledige stillinger, håndtere søknader og finne passende kandidater for dine jobbannonser.";
@@ -60,4 +60,3 @@ if ($_SESSION['userType'] === 'arbeidsgiver') {
 
 </html>
 
-<?php include 'inc/footer.php'; ?>

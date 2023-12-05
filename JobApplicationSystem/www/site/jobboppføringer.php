@@ -148,4 +148,3 @@ $result_categories = $conn->query($sql_categories);
 </body>
 
 </html>
-<?php include 'inc/footer.php'; ?>

@@ -63,4 +63,3 @@ if ($result_tittel->num_rows > 0) {
 
 $stmt_select_tittel->close();
 
-include 'inc/footer.php';
