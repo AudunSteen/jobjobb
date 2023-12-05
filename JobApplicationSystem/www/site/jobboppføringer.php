@@ -40,61 +40,9 @@ $result_categories = $conn->query($sql_categories);
 
 ?>
 
-<div class="container">
-    <h1>Jobboppføringer</h1>
-
-    <!-- Filter-skjema -->
-    <form method="GET" action="jobboppføringer.php">
-        <label for="filter">Filtrer etter kategori:</label>
-        <select name="filter" id="filter">
-            <option value="alle">Alle</option>
-            <?php
-            while ($row_category = $result_categories->fetch_assoc()) {
-                $category = $row_category['interesse'];
-                echo "<option value='$category'>$category</option>";
-            }
-            ?>
-        </select>
-        <label for="soknadsfrist">Sorter etter søknadsfrist:</label>
-        <select name="soknadsfrist" id="soknadsfrist">
-            <option value="asc">Dato stigende</option>
-            <option value="desc">Dato synkende</option>
-        </select>
-        <input type="submit" value="Filtrer">
-    </form>
-
-    <table>
-        <tr>
-            <th>Tittel</th>
-            <th>Beskrivelse</th>
-            <th>Publiseringsdato</th>
-            <th>Interesse</th>
-            <th>Handling</th>
-        </tr>
-        <?php
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                echo "<tr>";
-                echo "<td>" . $row["tittel"] . "</td>";
-                echo "<td>" . $row["beskrivelse"] . "</td>";
-                echo "<td>" . $row["publiseringsdato"] . "</td>";
-                echo "<td>" . $row["interesse"] . "</td>";
-                echo "<td><a href='vis_annonse.php?id=" . $row["id"] . "'>Vis detaljer</a></td>"; // Legg til lenke for å vise detaljer
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='5'>Ingen jobboppføringer tilgjengelig.</td></tr>";
-        }
-        ?>
-    </table>
-</div>
-
-<?php include 'inc/footer.php'; ?>
-
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <title>Jobboppføringer</title>
     <style>
@@ -125,12 +73,15 @@ $result_categories = $conn->query($sql_categories);
             margin-top: 20px;
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: 1px solid #ccc;
         }
 
-        th, td {
-            padding: 10px;
+        th,
+        td {
+            padding: 12px;
             text-align: left;
         }
 
@@ -146,6 +97,71 @@ $result_categories = $conn->query($sql_categories);
         tr:nth-child(odd) {
             background-color: #fff;
         }
+
+        select,
+        input {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
+
+<body>
+    <div class="container">
+        <h1>Jobboppføringer</h1>
+
+        <!-- Filter-skjema -->
+        <form method="GET" action="jobboppføringer.php">
+            <label for="filter">Filtrer etter kategori:</label>
+            <select name="filter" id="filter">
+                <option value="alle">Alle</option>
+                <?php
+                while ($row_category = $result_categories->fetch_assoc()) {
+                    $category = $row_category['interesse'];
+                    echo "<option value='$category'>$category</option>";
+                }
+                ?>
+            </select>
+            <label for="soknadsfrist">Sorter etter søknadsfrist:</label>
+            <select name="soknadsfrist" id="soknadsfrist">
+                <option value="asc">Dato stigende</option>
+                <option value="desc">Dato synkende</option>
+            </select>
+            <input type="submit" value="Filtrer">
+        </form>
+
+        <table>
+            <tr>
+                <th>Tittel</th>
+                <th>Beskrivelse</th>
+                <th>Publiseringsdato</th>
+                <th>Interesse</th>
+                <th>Søknadsfrist</th> <!-- Added column for Søknadsfrist -->
+                <th>Søk stilling</th>
+            </tr>
+            <?php
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row["tittel"] . "</td>";
+                    echo "<td>" . $row["beskrivelse"] . "</td>";
+                    echo "<td>" . $row["publiseringsdato"] . "</td>";
+                    echo "<td>" . $row["interesse"] . "</td>";
+                    echo "<td>" . $row["soknadsfrist"] . "</td>"; // Display the Søknadsfrist
+                    echo "<td><a href='vis_annonse.php?id=" . $row["id"] . "'>Vis detaljer</a></td>"; // Legg til lenke for å vise detaljer
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='6'>Ingen jobboppføringer tilgjengelig.</td></tr>";
+            }
+            ?>
+        </table>
+    </div>
+</body>
+
 </html>
+<?php include 'inc/footer.php'; ?>
