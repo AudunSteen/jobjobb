@@ -47,17 +47,17 @@ if ($result_tittel->num_rows > 0) {
     $result_soknader = $stmt_select_soknader->get_result();
 
     if ($result_soknader->num_rows > 0) {
-        echo "<table border='1'>";
-        echo "<tr><th>Bruker</th><th>Søknadstekst</th><th>Søknadsdato</th><th>PDF</th><th>PhoneNumber</th><th>Email</th></tr>";
+        echo "<table style='border-collapse: collapse; width: 100%;'>";
+        echo "<tr style='background-color: #f2f2f2;'><th>Bruker</th><th>Søknadstekst</th><th>Søknadsdato</th><th>Tlf</th><th>Email</th><th>Søknad</th></tr>";
 
         while ($row = $result_soknader->fetch_assoc()) {
             echo "<tr>";
-            echo "<td>" . $row["username"] . "</td>";
-            echo "<td>" . $row["soknadstekst"] . "</td>";
-            echo "<td>" . $row["soknadsdato"] . "</td>";
-            echo "<td><a href='" . $row["pdf_path"] . "' target='_blank'>Last ned PDF</a></td>";
-            echo "<td>" . $row["phoneNumber"] . "</td>";
-            echo "<td>" . $row["email"] . "</td>";
+            echo "<td style='border: 1px solid #ddd; padding: 8px;'>" . $row["username"] . "</td>";
+            echo "<td style='border: 1px solid #ddd; padding: 8px;'>" . $row["soknadstekst"] . "</td>";
+            echo "<td style='border: 1px solid #ddd; padding: 8px;'>" . $row["soknadsdato"] . "</td>";
+            echo "<td style='border: 1px solid #ddd; padding: 8px;'>" . $row["phoneNumber"] . "</td>";
+            echo "<td style='border: 1px solid #ddd; padding: 8px;'>" . $row["email"] . "</td>";
+            echo "<td style='border: 1px solid #ddd; padding: 8px;'><a href='" . $row["pdf_path"] . "' target='_blank'>Last ned PDF</a></td>";
             echo "</tr>";
         }
 

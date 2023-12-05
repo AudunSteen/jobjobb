@@ -15,7 +15,7 @@ if (!isset($_SESSION['username'])) {
 $server = "localhost";
 $brukernavn = "root";
 $passord = "";
-$database = "is115DB";
+$database = "jobbsoksystem";
 
 $conn = new mysqli($server, $brukernavn, $passord, $database);
 
@@ -36,7 +36,6 @@ if ($result->num_rows > 0) {
     $publiseringsdato = $row["publiseringsdato"];
     $interesse = $row["interesse"];
     $soknadsfrist = $row["soknadsfrist"];
-    $arbeidsgiver_id = $row["arbeidsgiver_id"];
 } else {
     echo "Annonse ikke funnet.";
     exit();
@@ -73,13 +72,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $tittel; ?></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
 <div class="container">
     <h1><?php echo $tittel; ?></h1>
     <p><strong>Beskrivelse:</strong> <?php echo $beskrivelse; ?></p>
     <p><strong>Publiseringsdato:</strong> <?php echo $publiseringsdato; ?></p>
     <p><strong>Interesse:</strong> <?php echo $interesse; ?></p>
     <p><strong>Søknadsfrist:</strong> <?php echo $soknadsfrist; ?></p>
-    <p><strong>Arbeidsgiver ID:</strong> <?php echo $arbeidsgiver_id; ?></p>
 
     <h2>Søk på denne stillingen</h2>
     <form method="post" action="" enctype="multipart/form-data">
@@ -90,5 +152,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="submit" value="Send søknad">
     </form>
 </div>
+
+</body>
+</html>
+
 
 <?php include 'inc/footer.php'; ?>
