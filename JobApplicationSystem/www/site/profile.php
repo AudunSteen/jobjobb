@@ -8,19 +8,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 include 'inc/header.php';
-
-$server = "localhost";
-$username = "root";
-$password = "";
-$database = "is115DB";
-
-// Create a connection
-$conn = new mysqli($server, $username, $password, $database);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include 'inc/db.inc.php';
 
 // Retrieve the original username of the logged-in user
 $originalUsername = $_SESSION['username'];

@@ -7,11 +7,7 @@ if (!isset($_SESSION['username']) || $_SESSION['userType'] !== 'arbeidsgiver') {
 }
 
 include 'inc/header.php';
-
-$server = "localhost";
-$brukernavn = "root";
-$passord = "";
-$database = "is115DB";
+include 'inc/db.inc.php';
 
 $conn = new mysqli($server, $brukernavn, $passord, $database);
 

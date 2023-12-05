@@ -9,17 +9,7 @@ if (!isset($_SESSION['username']) || $_SESSION['userType'] !== 'arbeidsgiver') {
 }
 
 include 'inc/header.php';
-
-$server = "localhost";
-$brukernavn = "root";
-$passord = "";
-$database = "is115DB";
-
-$conn = new mysqli($server, $brukernavn, $passord, $database);
-
-if ($conn->connect_error) {
-    die("Tilkobling mislyktes: " . $conn->connect_error);
-}
+include 'inc/db.inc.php';
 
 // Get jobbannonse_id from the URL parameter
 $jobbannonse_id = isset($_GET['jobbannonse_id']) ? $_GET['jobbannonse_id'] : 0;

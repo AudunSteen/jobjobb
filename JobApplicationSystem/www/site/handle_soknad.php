@@ -7,16 +7,7 @@ session_start();
 
 include 'inc/header.php';
 
-$server = "localhost";
-$brukernavn = "root";
-$passord = "";
-$database = "is115DB";
-
-$conn = new mysqli($server, $brukernavn, $passord, $database);
-
-if ($conn->connect_error) {
-    die("Tilkobling mislyktes: " . $conn->connect_error);
-}
+include 'inc/db.inc.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jobbannonse_id = $_POST['jobbannonse_id'];

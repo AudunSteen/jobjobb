@@ -7,17 +7,7 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Koble til databasen
-$server = "localhost";
-$brukernavn = "root";
-$passord = "";
-$database = "is115DB";
-
-$conn = new mysqli($server, $brukernavn, $passord, $database);
-
-if ($conn->connect_error) {
-    die("Tilkobling mislyktes: " . $conn->connect_error);
-}
+include 'inc/db.inc.php';
 
 // Behandle filtervalg
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'alle';

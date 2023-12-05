@@ -8,19 +8,7 @@ if (!isset($_SESSION['username']) || $_SESSION['userType'] !== 'arbeidsgiver') {
 }
 
 include 'inc/header.php';
-
-$server = "localhost";
-$brukernavn = "root";
-$passord = "";
-$database = "is115DB";
-
-// Opprett tilkobling
-$conn = new mysqli($server, $brukernavn, $passord, $database);
-
-// Sjekk tilkoblingen
-if ($conn->connect_error) {
-    die("Tilkobling mislyktes: " . $conn->connect_error);
-}
+include 'inc/db.inc.php';
 
 // Legg til en jobbannonse
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
