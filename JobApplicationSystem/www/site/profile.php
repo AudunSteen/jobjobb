@@ -138,7 +138,7 @@ if ($result->num_rows > 0) {
 </head>
 
 <body>
-    <h2>Profile Page</h2>
+    <h2><?php echo $_SESSION['username']; ?> sin profil!</h2>
 
     <?php
     if (isset($profilePicture)) {
