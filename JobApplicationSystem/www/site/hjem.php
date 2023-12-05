@@ -61,35 +61,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include 'inc/footer.php';
 ?>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <title>Legg til jobbannonse</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        textarea,
+        select,
+        input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
-    <h1><?php echo $_SESSION['username']; ?> sin profil</h1>
+      <h1>Velkommen, <?php echo $_SESSION['username']; ?>!</h1>
 
-        <h2>Legg til en jobbannonse</h2>
+        <h2>Opprett en ny stillingsannonse</h2>
+
         <form method="POST">
             <label for="tittel">Tittel:</label>
             <input type="text" name="tittel" required>
-            <br>
             <label for="beskrivelse">Beskrivelse:</label>
             <textarea name="beskrivelse" required></textarea>
-            <br>
             <label for="interesse">Interesse:</label>
             <select name="interesse">
                 <option value="IT">IT</option>
                 <option value="Administrasjon">Administrasjon</option>
                 <option value="Økonomi">Økonomi</option>
             </select>
-            <br>
-            <input type="submit" value="Legg til jobbannonse">
             <label for="soknadsfrist">Søknadsfrist:</label>
             <input type="date" name="soknadsfrist" required>
-
+            <input type="submit" value="Legg til jobbannonse">
         </form>
     </div>
 </body>
-</html>
 
+</html>
+<?php
+include 'inc/footer.php';
+?>
