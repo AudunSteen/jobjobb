@@ -83,7 +83,6 @@
                         echo '<li><a href="jobboppføringer.php">Hjem/annonser</a></li>';
                         echo '<li><a href="hjem.php">Opprett annonser</a></li>';
                         echo '<li><a href="index.php">Egne annonser</a></li>';
-                        echo '<li><a href="profile.php">Bedriftsprofil</a></li>';
                     }
                 }
 
