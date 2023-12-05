@@ -11,7 +11,7 @@ if (isset($_SESSION['username'])) {
     session_destroy();
 
 // Omdiriger til innloggingssiden med en logg ut-melding
-header("Location: login.php?logout_message= mikke mus stemme: Heisann sveisann du har blitt logget ut yahho ");
+header("Location: login.php?logout_message= Heisann, du har blitt logget ut av jobbsøkesystemt ");
 exit();
 
 } else {
