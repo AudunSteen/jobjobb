@@ -1,7 +1,7 @@
 <?php
 //vasking av data
 
-include 'inc/header.php';
+include 'inc/header.php'; //Navbar og rettigheter
 
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');

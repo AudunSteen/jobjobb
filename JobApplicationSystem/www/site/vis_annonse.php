@@ -3,25 +3,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include 'inc/header.php';
-
-// Sjekk om brukeren er logget inn
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Omdiriger brukeren til innloggingssiden hvis de ikke er logget inn
-    exit();
-}
-
-// Koble til databasen
-$server = "localhost";
-$brukernavn = "root";
-$passord = "";
-$database = "jobbsoksystem";
-
-$conn = new mysqli($server, $brukernavn, $passord, $database);
-
-if ($conn->connect_error) {
-    die("Tilkobling mislyktes: " . $conn->connect_error);
-}
+include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/db.inc.php'; //Database tilkobling
+include 'inc/session.php'; //Sjekker om bruker er logget inn
 
 // Hent annonseinformasjon basert på ID fra URL-parameteren
 $jobbannonse_id = isset($_GET['id']) ? $_GET['id'] : 0;
@@ -74,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -134,26 +119,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1><?php echo $tittel; ?></h1>
-    <p><strong>Beskrivelse:</strong> <?php echo $beskrivelse; ?></p>
-    <p><strong>Publiseringsdato:</strong> <?php echo $publiseringsdato; ?></p>
-    <p><strong>Interesse:</strong> <?php echo $interesse; ?></p>
-    <p><strong>Søknadsfrist:</strong> <?php echo $soknadsfrist; ?></p>
+    <div class="container">
+        <h1><?php echo $tittel; ?></h1>
+        <p><strong>Beskrivelse:</strong> <?php echo $beskrivelse; ?></p>
+        <p><strong>Publiseringsdato:</strong> <?php echo $publiseringsdato; ?></p>
+        <p><strong>Interesse:</strong> <?php echo $interesse; ?></p>
+        <p><strong>Søknadsfrist:</strong> <?php echo $soknadsfrist; ?></p>
 
-    <h2>Søk på denne stillingen</h2>
-    <form method="post" action="" enctype="multipart/form-data">
-        <label for="soknadstekst">Søknadstekst:</label>
-        <textarea name="soknadstekst" required></textarea><br>
-        <label for="pdf_path">Last opp CV (PDF):</label>
-        <input type="file" name="pdf_path" accept=".pdf"><br>
-        <input type="submit" value="Send søknad">
-    </form>
-</div>
+        <h2>Søk på denne stillingen</h2>
+        <form method="post" action="" enctype="multipart/form-data">
+            <label for="soknadstekst">Søknadstekst:</label>
+            <textarea name="soknadstekst" required></textarea><br>
+            <label for="pdf_path">Last opp CV (PDF):</label>
+            <input type="file" name="pdf_path" accept=".pdf"><br>
+            <input type="submit" value="Send søknad">
+        </form>
+    </div>
 
 </body>
+
 </html>
 
 

@@ -1,7 +1,7 @@
 <?php
 // job_listing.php
 
-include 'includes/header.php';
+include 'inc/header.php'; //Navbar og rettigheter
 
 // Håndter logikk for å hente og vise en enkelt jobboppføring fra databasen
 // For eksempel, hent jobboppføring basert på en ID fra URL-parameteren

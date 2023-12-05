@@ -8,8 +8,8 @@ if (!isset($_SESSION['username']) || $_SESSION['userType'] !== 'arbeidsgiver') {
     exit();
 }
 
-include 'inc/header.php';
-include 'inc/db.inc.php';
+include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/db.inc.php'; //Database tilkobling
 
 // Get jobbannonse_id from the URL parameter
 $jobbannonse_id = isset($_GET['jobbannonse_id']) ? $_GET['jobbannonse_id'] : 0;
@@ -64,4 +64,3 @@ if ($result_tittel->num_rows > 0) {
 $stmt_select_tittel->close();
 
 include 'inc/footer.php';
-?>

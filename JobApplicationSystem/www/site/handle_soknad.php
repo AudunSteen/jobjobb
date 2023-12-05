@@ -5,9 +5,8 @@
 //chmod -R 777 soknader
 session_start();
 
-include 'inc/header.php';
-
-include 'inc/db.inc.php';
+include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/db.inc.php'; //Database tilkobling
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jobbannonse_id = $_POST['jobbannonse_id'];
@@ -40,4 +39,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 include 'inc/footer.php';
-?>

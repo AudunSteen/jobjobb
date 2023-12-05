@@ -6,8 +6,8 @@ if (!isset($_SESSION['username']) || $_SESSION['userType'] !== 'arbeidsgiver') {
     exit();
 }
 
-include 'inc/header.php';
-include 'inc/db.inc.php';
+include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/db.inc.php'; //Database tilkobling
 
 $conn = new mysqli($server, $brukernavn, $passord, $database);
 
@@ -57,4 +57,3 @@ if ($result->num_rows === 1) {
 }
 
 include 'inc/footer.php';
-?>

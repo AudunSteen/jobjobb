@@ -7,8 +7,8 @@ if (!isset($_SESSION['username']) || $_SESSION['userType'] !== 'arbeidsgiver') {
     exit();
 }
 
-include 'inc/header.php';
-include 'inc/db.inc.php';
+include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/db.inc.php'; //Database tilkobling
 
 // Legg til en jobbannonse
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -20,11 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Hent arbeidsgiverens ID fra databasen basert på brukernavnet i sesjonen
     $arbeidsgiver_username = $_SESSION['username'];
-    
+
     $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
     $stmt->bind_param("s", $arbeidsgiver_username);
     $stmt->execute();
-    
+
     $result = $stmt->get_result();
 
     if ($result->num_rows === 1) {
@@ -33,10 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Legg til jobbannonse med kobling til arbeidsgiveren
         $sql_insert_annonse = "INSERT INTO jobbannonser (tittel, beskrivelse, publiseringsdato, interesse, soknadsfrist, arbeidsgiver_id) VALUES (?, ?, ?, ?, ?, ?)";
-        
+
         $stmt_insert = $conn->prepare($sql_insert_annonse);
         $stmt_insert->bind_param("sssssi", $tittel, $beskrivelse, $publiseringsdato, $interesse, $soknadsfrist, $arbeidsgiver_id);
-        
+
         if ($stmt_insert->execute()) {
             echo "Jobbannonse lagt til.";
         } else {
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <div class="container">
-      <h1>Velkommen, <?php echo $_SESSION['username']; ?>!</h1>
+        <h1>Velkommen, <?php echo $_SESSION['username']; ?>!</h1>
 
         <h2>Opprett en ny stillingsannonse</h2>
 

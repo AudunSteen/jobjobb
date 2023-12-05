@@ -1,13 +1,7 @@
 <?php
-include 'inc/header.php';
-
-// Sjekk om brukeren er logget inn
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Omdiriger brukeren til innloggingssiden hvis de ikke er logget inn
-    exit();
-}
-
-include 'inc/db.inc.php';
+include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/db.inc.php'; //Database tilkobling
+include 'inc/session.php'; //Sjekker om bruker er logget inn
 
 // Behandle filtervalg
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'alle';

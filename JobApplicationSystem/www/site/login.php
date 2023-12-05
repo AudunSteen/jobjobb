@@ -1,9 +1,8 @@
 <?php
 // login.php
 
-include 'inc/header.php';
-
-include 'inc/db.inc.php';
+include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/db.inc.php'; //Database tilkobling
 
 $dsn = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST;
 

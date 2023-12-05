@@ -1,13 +1,8 @@
 <?php
 session_start();
 
-// Sjekk om brukeren er logget inn
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Send brukeren tilbake til innloggingssiden hvis ikke logget inn
-    exit();
-}
-
-include 'inc/header.php';
+include 'inc/session.php'; //Sjekker om bruker er logget inn
+include 'inc/header.php'; //Navbar og rettigheter
 
 // Funksjon for å lagre opplastede filer på serveren
 function saveUploadedFile($fileInputName, $destinationFolder)
@@ -28,8 +23,8 @@ function saveUploadedFile($fileInputName, $destinationFolder)
         echo "Beklager, kun PDF, DOC og DOCX-filer er tillatt.";
         $uploadOk = 0;
     }
-    
-    
+
+
 
     // Sjekk om $uploadOk er satt til 0 av en feil
     if ($uploadOk == 0) {
