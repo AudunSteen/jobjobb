@@ -5,7 +5,7 @@
 //chmod -R 777 soknader
 session_start();
 
-include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 include 'inc/db.inc.php'; //Database tilkobling
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

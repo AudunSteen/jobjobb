@@ -3,13 +3,8 @@
 //starter session for å kunne gi ulike rettigheter i systemet.
 session_start();
 
-// Sjekk om brukeren er logget inn
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Send brukeren tilbake til innloggingssiden hvis ikke logget inn
-    exit();
-}
-
-include 'inc/header.php';
+include 'inc/session.php'; //Sjekker om bruker er logget inn
+include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 
 // Melding til brukeren basert om brukeren er arbeidsgiver eller jobbsoker
 $userTypeMessage = "";

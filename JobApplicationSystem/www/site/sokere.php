@@ -8,13 +8,13 @@ if (!isset($_SESSION['username']) || $_SESSION['userType'] !== 'arbeidsgiver') {
     exit();
 }
 
-include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 include 'inc/db.inc.php'; //Database tilkobling
 
-// Get jobbannonse_id from the URL parameter
+// Får jobbannonse_id fra URL parameteret
 $jobbannonse_id = isset($_GET['jobbannonse_id']) ? $_GET['jobbannonse_id'] : 0;
 
-// Hent tittel fra jobbannonser
+// Henter tittel fra jobbannonser
 $sql_select_tittel = "SELECT tittel FROM jobbannonser WHERE id = ?";
 $stmt_select_tittel = $conn->prepare($sql_select_tittel);
 $stmt_select_tittel->bind_param("i", $jobbannonse_id);
@@ -27,7 +27,7 @@ if ($result_tittel->num_rows > 0) {
 
     echo "<h1>Søkere på stillingen som  $jobbannonse_tittel </h1>";
 
-    // Hent søknader med phoneNumber og email fra brukeren
+    // Henter søknader med phoneNumber og email fra brukeren
     $sql_select_soknader = "SELECT soknader.*, users.username, users.phoneNumber, users.email FROM soknader 
                             JOIN users ON soknader.jobbsoker_id = users.id 
                             WHERE soknader.jobbannonse_id = ?";

@@ -1,7 +1,5 @@
 <?php
-// login.php
-
-include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 include 'inc/db.inc.php'; //Database tilkobling
 
 $dsn = 'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST;
@@ -15,39 +13,39 @@ try {
     echo "Error connecting to database: " . $e->getMessage();
 }
 
-// Definere variabler og gjøre dem tomme slik at de kan lagres
+// Definerer variabler og gjør dem tomme slik at de kan lagres
 $usernameErr = $passwordErr = "";
 
-// Sjekke om skjemaet har blitt sendt
+// Sjekker om skjemaet er sendt
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["username"])) {
         $usernameErr = "Du må skrive inn brukernavnet ditt";
     } else if (empty($_POST["password"])) {
         $passwordErr = "Du må skrive inn passordet ditt";
     } else {
-        // Sanitize user input to prevent SQL injection
+        // Sanitiserer brukerinput for å forhindre SQL-injection
         $username = filter_var($_POST["username"], FILTER_SANITIZE_STRING);
         $password = $_POST["password"];
 
-        // Retrieve user data from the database
+        // Henter brukerdata fra DB
         $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Verify the entered password against the stored hash
+        // Verifiser valgt passord mot lagret hash
         if ($user && password_verify($password, $user['password'])) {
-            // Start en sesjon og lagre brukernavnet, brukerrollen, og bruker-ID
+            // Start en sesjon og lagre brukernavn, brukerrolle, og bruker-ID
             session_start();
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
 
-            // Hent brukerens userType fra databasen og lagre det i sesjonen
+            // Henter brukerens userType fra DB og lagrer det i sesjonen
             $stmt_userType = $pdo->prepare("SELECT userType FROM users WHERE username = ?");
             $stmt_userType->execute([$username]);
             $userType = $stmt_userType->fetchColumn();
             $_SESSION['userType'] = $userType;
 
-            // Redirect til dashboard.php
+            // Omdirigeres til dashboard.php
             header("Location: dashboard.php");
             exit();
         } else {
@@ -59,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 include 'inc/footer.php';
 ?>
 
-<!-- Opprette et skjema hvor brukeren kan fylle inn informasjonen sin og legger til feilmeldinger fra PHP-koden -->
+<!-- Skjema hvor bruker kan fylle inn informasjonen sin og legger til feilmeldinger fra PHP-koden -->
 <form method="post" action="">
 
     <label for="username">Brukernavn</label><br>

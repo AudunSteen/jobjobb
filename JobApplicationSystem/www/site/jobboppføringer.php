@@ -1,13 +1,13 @@
 <?php
-include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 include 'inc/db.inc.php'; //Database tilkobling
 include 'inc/session.php'; //Sjekker om bruker er logget inn
 
-// Behandle filtervalg
+// Behandler filtervalg
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'alle';
 $soknadsfrist = isset($_GET['soknadsfrist']) ? $_GET['soknadsfrist'] : 'asc';
 
-// SQL-query med filter og sortering
+// SQL-spørringer med filter og sortering
 $sql = "SELECT * FROM jobbannonser";
 
 if ($filter !== 'alle') {
@@ -124,7 +124,7 @@ $result_categories = $conn->query($sql_categories);
                 <th>Beskrivelse</th>
                 <th>Publiseringsdato</th>
                 <th>Interesse</th>
-                <th>Søknadsfrist</th> <!-- Added column for Søknadsfrist -->
+                <th>Søknadsfrist</th>
                 <th>Søk stilling</th>
             </tr>
             <?php
@@ -135,8 +135,8 @@ $result_categories = $conn->query($sql_categories);
                     echo "<td>" . $row["beskrivelse"] . "</td>";
                     echo "<td>" . $row["publiseringsdato"] . "</td>";
                     echo "<td>" . $row["interesse"] . "</td>";
-                    echo "<td>" . $row["soknadsfrist"] . "</td>"; // Display the Søknadsfrist
-                    echo "<td><a href='vis_annonse.php?id=" . $row["id"] . "'>Vis detaljer</a></td>"; // Legg til lenke for å vise detaljer
+                    echo "<td>" . $row["soknadsfrist"] . "</td>";
+                    echo "<td><a href='vis_annonse.php?id=" . $row["id"] . "'>Vis detaljer</a></td>";
                     echo "</tr>";
                 }
             } else {

@@ -1,11 +1,12 @@
 <?php
 session_start();
 
-include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 include 'inc/db.inc.php'; //Database tilkobling
 include 'inc/session.php'; //Sjekker om bruker er logget inn
 
 // Retrieve the original username of the logged-in user
+
 $originalUsername = $_SESSION['username'];
 
 // Check if the form is submitted

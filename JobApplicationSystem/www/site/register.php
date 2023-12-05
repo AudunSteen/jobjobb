@@ -1,7 +1,6 @@
 <?php
-//vasking av data
 
-include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
@@ -17,10 +16,10 @@ try {
     echo "Error connecting to database: " . $e->getMessage();
 }
 
-// Definere variabler og gjøre dem tomme slik at de kan lagres
+// Definerer variabler og gjøre dem tomme slik at de kan lagres
 $usernameErr = $passwordErr = $repeatPasswordErr = $phoneNumberErr = $emailErr = "";
 
-// Sjekke om skjemaet har blitt sendt
+// Sjekker om skjemaet har blitt sendt
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["username"])) {
         $usernameErr = "Du må skrive inn brukernavnet ditt";
@@ -41,11 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "email" => $_POST["email"]
         );
 
-        // Insert data into the database
+        // Legger data inn i DB
         $stmt = $pdo->prepare("INSERT INTO users (username, password, phoneNumber, email, userType) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$formData["username"], $formData["password"], $formData["phoneNumber"], $formData["email"], $_POST["userType"]]);
-
-
 
         echo "Brukeren har blitt lagt til med følgende informasjon: <br>";
         echo "Brukernavn: ", $formData["username"];
@@ -61,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 include 'inc/footer.php';
 ?>
 
-<!-- Opprette et skjema hvor brukeren kan fylle inn informasjonen sin og legger til feilmeldinger fra PHP-koden -->
+<!-- Skjema hvor bruker kan fylle inn informasjonen sin og legger til feilmeldinger fra PHP-koden -->
 <form method="post" action="">
 
     <label for="username">Brukernavn</label><br>

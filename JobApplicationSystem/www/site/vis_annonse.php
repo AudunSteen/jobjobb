@@ -1,13 +1,13 @@
 <?php
-// Enable error reporting
+// Tillat feilrapportering
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 include 'inc/db.inc.php'; //Database tilkobling
 include 'inc/session.php'; //Sjekker om bruker er logget inn
 
-// Hent annonseinformasjon basert på ID fra URL-parameteren
+// Henter annonseinformasjon basert på ID fra URL-parameteren
 $jobbannonse_id = isset($_GET['id']) ? $_GET['id'] : 0;
 
 $sql = "SELECT * FROM jobbannonser WHERE id = $jobbannonse_id";
@@ -25,26 +25,27 @@ if ($result->num_rows > 0) {
     exit();
 }
 
-// Behandle søknadssubmisjon
+// Behandler søknadssubmisjon
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validér og lagre søknaden i databasen
     $jobbsoker_id = $_SESSION['user_id']; // Assuming you have a user_id in the session
     $soknadstekst = $_POST['soknadstekst'];
 
-    // Handle file upload errors
+    // Handling ved feil av filopplastning
     if ($_FILES['pdf_path']['error'] !== 0) {
         echo "File upload error: " . $_FILES['pdf_path']['error'];
         exit();
     }
 
-    // Continue with the rest of your file upload logic
+    // genererer en unik ID basert på nåværende tidspunkt, noe som bidrar til å gi filen et unikt navn 
+    // for å unngå eventuelle konflikter med eksisterende filer
     $pdf_path = '';
     if (isset($_FILES['pdf_path']) && $_FILES['pdf_path']['error'] === 0) {
         $pdf_path = 'soknader/' . uniqid() . '_' . $_FILES['pdf_path']['name'];
         move_uploaded_file($_FILES['pdf_path']['tmp_name'], $pdf_path);
     }
 
-    // Insert the application into the soknader table
+    // Legger inn søknad i søknadstabellen
     $insert_sql = "INSERT INTO soknader (jobbannonse_id, jobbsoker_id, soknadstekst, soknadsdato, pdf_path) 
                    VALUES ('$jobbannonse_id', '$jobbsoker_id', '$soknadstekst', NOW(), '$pdf_path')";
 

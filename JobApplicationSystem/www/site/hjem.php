@@ -1,16 +1,16 @@
 <?php
 session_start();
 
-// Sjekk om brukeren er logget inn
+// Sjekker om brukeren er logget inn
 if (!isset($_SESSION['username']) || $_SESSION['userType'] !== 'arbeidsgiver') {
     header("Location: login.php"); // Send brukeren tilbake til innloggingssiden hvis ikke logget inn eller ikke er arbeidsgiver
     exit();
 }
 
-include 'inc/header.php'; //Navbar og rettigheter
+include 'inc/header.php'; //Inkluderer navigasjonsmeny og rettigheter
 include 'inc/db.inc.php'; //Database tilkobling
 
-// Legg til en jobbannonse
+// Legger til en jobbannonse
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tittel = $_POST['tittel'];
     $beskrivelse = $_POST['beskrivelse'];
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $interesse = $_POST['interesse'];
     $soknadsfrist = $_POST['soknadsfrist'];
 
-    // Hent arbeidsgiverens ID fra databasen basert på brukernavnet i sesjonen
+    // Henter arbeidsgiverens ID fra databasen basert på brukernavnet i sesjonen
     $arbeidsgiver_username = $_SESSION['username'];
 
     $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $arbeidsgiver = $result->fetch_assoc();
         $arbeidsgiver_id = $arbeidsgiver['id'];
 
-        // Legg til jobbannonse med kobling til arbeidsgiveren
+        // Legger til jobbannonse med kobling til arbeidsgiveren
         $sql_insert_annonse = "INSERT INTO jobbannonser (tittel, beskrivelse, publiseringsdato, interesse, soknadsfrist, arbeidsgiver_id) VALUES (?, ?, ?, ?, ?, ?)";
 
         $stmt_insert = $conn->prepare($sql_insert_annonse);
